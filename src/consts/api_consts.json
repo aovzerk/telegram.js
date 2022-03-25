@@ -1,0 +1,9 @@
+{
+    "base_url": "https://api.telegram.org/",
+    "interval_update": 300,
+    "bot_command": "bot_command",
+    "methods": {
+        "getUpdates": "getUpdates",
+        "sendMessage": "sendMessage"
+    }
+}
