@@ -4,8 +4,13 @@ const EventEmitter = require("events");
 const Message = require("../structures/Message");
 const api_consts = require("../consts/api_consts.json");
 class Client extends EventEmitter {
-	constructor() {
+	constructor(options) {
 		super();
+		const { ignore_start_message } = options;
+		this.ignore_start_message = false;
+		if (ignore_start_message) {
+			this.ignore_start_message = ignore_start_message;
+		}
 		this.last_offset = 0;
 	}
 	get token() {
@@ -22,7 +27,12 @@ class Client extends EventEmitter {
 				"body": body
 			}).then(async response => {
 				response.json().then(data => {
-					result(data);
+					if (data.error_code) {
+						reject(data);
+					} else {
+						result(data);
+					}
+
 				}).catch(err => { reject(err); });
 
 			}).catch(err => { reject(err); });
@@ -31,6 +41,10 @@ class Client extends EventEmitter {
 	getUpdates() {
 		this.send_data({ "method": "GET", "body": null, "url": `${this.build_url(api_consts.methods.getUpdates)}?offset=${this.last_offset}` }).then(data => {
 			if (data.result.length == 0) {
+				setTimeout(() => this.getUpdates(), api_consts.interval_update);
+			} else if (this.ignore_start_message) {
+				this.last_offset = Number(data.result[data.result.length - 1].update_id) + 1;
+				this.ignore_start_message = false;
 				setTimeout(() => this.getUpdates(), api_consts.interval_update);
 			} else {
 				this.last_offset = Number(data.result[data.result.length - 1].update_id) + 1;

@@ -1,7 +1,7 @@
 const { Client, Button, RowButtons, ReplyKeyboardMarkup } = require("../");
 const cfg = require("./cfg.json");
 
-const bot = new Client();
+const bot = new Client({ "ignore_start_message": true });
 bot.on("message", msg => {
 	if (msg.isBotCommand()) {
 		if (msg.d.text == "/help") {
