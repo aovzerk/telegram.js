@@ -51,8 +51,14 @@ class Client extends EventEmitter {
 				this.last_offset = Number(data.result[data.result.length - 1].update_id) + 1;
 				data.result.forEach(message => {
 					if (message.message) {
-						const new_message = new Message(message.message, this);
-						this.emit("message", new_message);
+						if (message.message.entities && message.message.entities[0].type == api_consts.bot_command) {
+							const new_message = new Message(message.message, this, true);
+							this.emit("command", new_message);
+						} else {
+							const new_message = new Message(message.message, this, false);
+							this.emit("message", new_message);
+						}
+
 					} else if (message.callback_query) {
 						const new_callback = new CallBackT(message.callback_query, this);
 						this.emit("new_callback", new_callback);

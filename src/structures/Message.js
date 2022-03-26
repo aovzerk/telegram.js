@@ -1,15 +1,13 @@
 "use strict";
 const api_consts = require("../consts/api_consts.json");
 class Message {
-	constructor(data, client) {
+	constructor(data, client, isCommand) {
 		this.d = data;
 		this.client = client;
+		this.isCommand = isCommand;
 	}
 	isBotCommand() {
-		if (this.d.entities && this.d.entities[0].type == api_consts.bot_command) {
-			return true;
-		}
-		return false;
+		return this.isCommand;
 	}
 	send_message_chat(options) {
 		const { text, keyboard } = options;
