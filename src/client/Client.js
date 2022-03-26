@@ -2,6 +2,7 @@
 const fetch = require("node-fetch");
 const EventEmitter = require("events");
 const Message = require("../structures/Message");
+const CallBackT = require("../structures/CallBackT");
 const api_consts = require("../consts/api_consts.json");
 class Client extends EventEmitter {
 	constructor(options) {
@@ -49,8 +50,14 @@ class Client extends EventEmitter {
 			} else {
 				this.last_offset = Number(data.result[data.result.length - 1].update_id) + 1;
 				data.result.forEach(message => {
-					const new_message = new Message(message.message, this);
-					this.emit("message", new_message);
+					if (message.message) {
+						const new_message = new Message(message.message, this);
+						this.emit("message", new_message);
+					} else if (message.callback_query) {
+						const new_callback = new CallBackT(message.callback_query, this);
+						this.emit("new_callback", new_callback);
+					}
+
 				});
 				setTimeout(() => this.getUpdates(), api_consts.interval_update);
 			}

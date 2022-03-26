@@ -2,5 +2,6 @@
 
 exports.Client = require("./client/Client");
 exports.ReplyKeyboardMarkup = require("./structures/ReplyKeyboardMarkup");
-exports.RowButtons = require("./structures/RowButtons");
-exports.Button = require("./structures/ButtonKeyboard");
+exports.RowButtonsKeyboardMarkup = require("./structures/RowButtons");
+exports.InlineKeyboardMarkup = require("./structures/InlineKeyboardMarkup");
+exports.InlineKeyboardMarkupButton = require("./structures/InlineKeyboardMarkupButton");

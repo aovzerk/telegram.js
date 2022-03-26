@@ -1,5 +1,5 @@
 "use strict";
-class Button {
+class ReplyKeyboardMarkupButton {
 	constructor(text) {
 		this.text = text;
 	}
@@ -13,4 +13,4 @@ class Button {
 		};
 	}
 }
-module.exports = Button;
+module.exports = ReplyKeyboardMarkupButton;

@@ -1,22 +1,26 @@
-const { Client, Button, RowButtons, ReplyKeyboardMarkup } = require("../");
+const { Client, ReplyKeyboardMarkupButton, RowButtonsKeyboardMarkup, ReplyKeyboardMarkup, InlineKeyboardMarkupButton, InlineKeyboardMarkup } = require("../");
 const cfg = require("./cfg.json");
 
-const bot = new Client({ "ignore_start_message": true });
+const bot = new Client({ "ignore_start_message": false });
+bot.on("new_callback", call => {
+	call.answerCallbackQuery({ "text": "" }).catch(err => console.log(err));
+	call.message.send_message_chat({ "text": "Hello" });
+});
 bot.on("message", msg => {
 	if (msg.isBotCommand()) {
 		if (msg.d.text == "/help") {
 			const description = `Привет ${msg.d.chat.first_name} ${msg.d.chat.last_name}(@${msg.d.chat.username})\nУ меня есть команды:\n /keyboard`;
 			msg.send_message_chat({ "text": description });
 		} else if (msg.d.text == "/keyboard") {
-			const row = new RowButtons()
+			const row = new RowButtonsKeyboardMarkup()
 				.addButton(
-					new Button("Кто твой создатель?"),
-					new Button("Как тебя зовут?")
+					new ReplyKeyboardMarkupButton("Кто твой создатель?"),
+					new ReplyKeyboardMarkupButton("Как тебя зовут?")
 				);
-			const row2 = new RowButtons()
+			const row2 = new RowButtonsKeyboardMarkup()
 				.addButton(
-					new Button("GitHub"),
-					new Button("Discord")
+					new ReplyKeyboardMarkupButton("GitHub"),
+					new ReplyKeyboardMarkupButton("Discord")
 				);
 			const Keyboard = new ReplyKeyboardMarkup({ "resize_keyboard": true })
 				.addRowButtons(row, row2);
@@ -25,7 +29,13 @@ bot.on("message", msg => {
 			msg.send_message_chat({ "text": "Клавиатура создана", "keyboard": Keyboard.toJSON() });
 		}
 	} else if (msg.d.text == "Кто твой создатель?") {
-		msg.send_message_chat({ "text": "Меня сделал AOV" });
+		const row = new RowButtonsKeyboardMarkup()
+			.addButton(
+				new InlineKeyboardMarkupButton({ "text": "Hello", "callback_data": "id1" })
+			);
+		const board = new InlineKeyboardMarkup()
+			.addRowButtons(row);
+		msg.send_message_chat({ "text": "Меня сделал AOV", "keyboard": board.toJSON() });
 	} else if (msg.d.text == "Как тебя зовут?") {
 		msg.send_message_chat({ "text": "Меня зовут aovs_bot" });
 	} else if (msg.d.text == "GitHub") {

@@ -4,6 +4,7 @@
     "bot_command": "bot_command",
     "methods": {
         "getUpdates": "getUpdates",
-        "sendMessage": "sendMessage"
+        "sendMessage": "sendMessage",
+        "answerCallbackQuery": "answerCallbackQuery"
     }
 }
